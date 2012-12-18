@@ -30,6 +30,7 @@ module("shifty")
 
 -- variables
 config = {}
+config.prevent_focus_steal = false
 config.tags = {}
 config.apps = {}
 config.defaults = {}
@@ -697,25 +698,21 @@ function match(c, startup)
     if geom then c:geometry(geom) end
     if struts then c:struts(struts) end
 
-    -- prevent focus and popup if the client is on another tag
-    local currenttags = awful.tag.selectedlist(c.screen)
-    -- local tagcount = 0
-    -- local clienttagcount = 0
-
-    -- for _ in pairs(currenttags) do
-    --   tagcount = tagcount + 1
-    -- end
-
-    -- for _ in pairs(target_tags) do
-    --   clienttagcount = clienttagcount + 1
-    -- end
-
-    if not (#currenttags == 1 and #target_tags == 1 and target_tags[1] == currenttags[1]) then
+    -- prevent the client from stealing focus if it is on another tag
+    if config.prevent_focus_steal then
       nofocus = true
       nopopup = true
+
+      for i, t1 in ipairs(target_tags) do
+        for j, t2 in ipairs(sel) do
+          if t1 == t2 then
+            nofocus = false
+            nopopup = false
+          end
+        end
+      end
     end
 
-    -- if target_tags = 
     local showtags = {}
     local u = nil
     if #target_tags > 0 and not startup then
