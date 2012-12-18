@@ -30,7 +30,6 @@ module("shifty")
 
 -- variables
 config = {}
-config.prevent_focus_steal = false
 config.tags = {}
 config.apps = {}
 config.defaults = {}
@@ -459,7 +458,7 @@ end
 --            rc.lua
 --@param c : client to be matched
 function match(c, startup)
-    local nopopup, intrusive, nofocus, run, slave
+    local nopopup, intrusive, nofocus, run, slave, notagsteal
     local wfact, struts, geom, float
     local target_tag_names, target_tags = {}, {}
     local typ = c.type
@@ -604,7 +603,8 @@ function match(c, startup)
                     for kk, vv in pairs(a.props) do
                         awful.client.property.set(c, kk, vv)
                     end
-                end
+                  end
+                if a.notagsteal ~= nil then notagsteal = a.notagsteal end
             end
         end
     end
@@ -699,7 +699,7 @@ function match(c, startup)
     if struts then c:struts(struts) end
 
     -- prevent the client from stealing focus if it is on another tag
-    if config.prevent_focus_steal then
+    if notagsteal then
       nofocus = true
       nopopup = true
 
