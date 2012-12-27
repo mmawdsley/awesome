@@ -104,7 +104,7 @@ local function widget_tasklist_label_common(c, args)
     local i = 0
 
     for k, cl in ipairs(clients) do
-      if not (c.skip_taskbar or c.hidden or c.type == "splash" or c.type == "dock" or c.type == "desktop") then
+      if not (cl.skip_taskbar or cl.hidden or cl.type == "splash" or cl.type == "dock" or cl.type == "desktop") then
         i = i + 1
         if cl == c then index = i end
       end
